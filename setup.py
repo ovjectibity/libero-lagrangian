@@ -1,7 +1,7 @@
 # read the contents of your README file
 from os import path
 
-from setuptools import find_packages, setup
+from setuptools import find_namespace_packages, setup
 
 this_directory = path.abspath(path.dirname(__file__))
 with open(path.join(this_directory, "./README.md"), encoding="utf-8") as f:
@@ -13,10 +13,24 @@ long_description = "".join(lines)
 
 setup(
     name="libero",
-    packages=[package for package in find_packages() if package.startswith("libero")],
-    install_requires=[],
+    packages=find_namespace_packages(include=["libero*"]),
+    install_requires=[
+        "bddl==1.0.1",
+        "cloudpickle",
+        "easydict",
+        "future==0.18.2",
+        "gym==0.25.2",
+        "matplotlib",
+    ],
     eager_resources=["*"],
     include_package_data=True,
+    package_data={
+        "libero.libero": [
+            "assets/**/*",
+            "bddl_files/**/*",
+            "init_files/**/*",
+        ],
+    },
     python_requires=">=3",
     description="LIBERO: Benchmarking Knowledge Transfer for Lifelong Robot Learning",
     author="Bo Liu, Yifeng Zhu, Chongkai Gao, Yihao Feng, Qiang Liu, Yuke Zhu, Peter Stone",
