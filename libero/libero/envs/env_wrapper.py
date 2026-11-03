@@ -38,6 +38,7 @@ class ControlEnv:
         camera_segmentations=None,
         renderer="mujoco",
         renderer_config=None,
+        controller_config=None,
         **kwargs,
     ):
         assert os.path.exists(
@@ -47,7 +48,8 @@ class ControlEnv:
         # robosuite 1.5 replaces the per-arm controller loader with a
         # composite configuration. The robot default preserves LIBERO's
         # former OSC_POSE configuration for Panda.
-        controller_configs = suite.load_composite_controller_config(robot=robots[0])
+        if controller_config is None:
+            controller_config = suite.load_composite_controller_config(robot=robots[0])
 
         problem_info = BDDLUtils.get_problem_info(bddl_file_name)
         # Check if we're using a multi-armed environment and use env_configuration argument if so
@@ -59,7 +61,7 @@ class ControlEnv:
         self.env = TASK_MAPPING[self.problem_name](
             bddl_file_name,
             robots=robots,
-            controller_configs=controller_configs,
+            controller_configs=controller_config,
             gripper_types=gripper_types,
             initialization_noise=initialization_noise,
             use_camera_obs=use_camera_obs,
